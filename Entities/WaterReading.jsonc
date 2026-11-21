@@ -1,0 +1,137 @@
+{
+  "name": "WaterReading",
+  "type": "object",
+  "properties": {
+    "owner_id": {
+      "type": "string",
+      "description": "Account that owns this reading (set server-side; used by row-level security)"
+    },
+    "device_id": {
+      "type": "string",
+      "description": "ESP32 device identifier that produced or is attributed to this reading"
+    },
+    "ph": {
+      "type": "number"
+    },
+    "turbidity": {
+      "type": "number",
+      "description": "NTU"
+    },
+    "temperature": {
+      "type": "number",
+      "description": "Degrees Celsius"
+    },
+    "ec": {
+      "type": "number",
+      "description": "Electrical conductivity, uS/cm"
+    },
+    "tds": {
+      "type": "number",
+      "description": "Total dissolved solids, ppm"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "safe",
+        "warning",
+        "contaminated"
+      ],
+      "enumColors": [
+        "green",
+        "yellow",
+        "red"
+      ]
+    },
+    "anomaly_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "live",
+        "upload",
+        "demo"
+      ],
+      "enumColors": [
+        "blue",
+        "purple",
+        "gray"
+      ]
+    },
+    "upload_id": {
+      "type": "string"
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "note": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "device_id",
+    "recorded_at",
+    "owner_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
