@@ -1,0 +1,121 @@
+{
+  "name": "Device",
+  "type": "object",
+  "properties": {
+    "owner_id": {
+      "type": "string",
+      "description": "Account that owns this device. Used to attribute incoming device readings to the right user."
+    },
+    "name": {
+      "type": "string"
+    },
+    "device_id": {
+      "type": "string",
+      "description": "Public device identifier used in the ingestion payload"
+    },
+    "location": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "online",
+        "offline"
+      ],
+      "enumColors": [
+        "green",
+        "gray"
+      ]
+    },
+    "last_seen": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "battery": {
+      "type": "number"
+    },
+    "signal": {
+      "type": "number",
+      "description": "WiFi RSSI in dBm"
+    },
+    "firmware": {
+      "type": "string"
+    },
+    "sample_interval_seconds": {
+      "type": "number"
+    },
+    "owner_email": {
+      "type": "string",
+      "description": "Alert recipient for this device"
+    },
+    "api_key_hash": {
+      "type": "string",
+      "description": "SHA-256 of the device API key. The key itself is never stored."
+    },
+    "api_key_prefix": {
+      "type": "string",
+      "description": "First characters of the key, shown for identification only"
+    },
+    "key_created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "active": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "device_id",
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "data.owner_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
