@@ -1,0 +1,133 @@
+{
+  "name": "Alert",
+  "type": "object",
+  "properties": {
+    "owner_id": {
+      "type": "string",
+      "description": "Account that owns this alert (set server-side; used by row-level security)"
+    },
+    "device_id": {
+      "type": "string"
+    },
+    "reading_id": {
+      "type": "string"
+    },
+    "parameter": {
+      "type": "string"
+    },
+    "value": {
+      "type": "number"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "critical"
+      ],
+      "enumColors": [
+        "blue",
+        "yellow",
+        "red"
+      ]
+    },
+    "message": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "acknowledged",
+        "resolved"
+      ],
+      "enumColors": [
+        "red",
+        "yellow",
+        "green"
+      ]
+    },
+    "email_sent": {
+      "type": "boolean"
+    },
+    "acknowledged_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "live",
+        "upload",
+        "ml"
+      ],
+      "enumColors": [
+        "blue",
+        "purple",
+        "pink"
+      ]
+    }
+  },
+  "required": [
+    "message",
+    "severity",
+    "owner_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.owner_id": "{{user.id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
