@@ -1,0 +1,65 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "action": {
+      "type": "string",
+      "description": "login_failed, upload_imported, device_registered, ingest_rejected, alert_raised ..."
+    },
+    "resource": {
+      "type": "string"
+    },
+    "subject_hash": {
+      "type": "string",
+      "description": "SHA-256 of an email or device id \u2014 never the raw value"
+    },
+    "detail": {
+      "type": "string",
+      "description": "Redacted, structured detail. Never contains passwords, tokens or raw PII."
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failure"
+      ],
+      "enumColors": [
+        "green",
+        "red"
+      ]
+    },
+    "ip_hash": {
+      "type": "string",
+      "description": "SHA-256 of the caller IP"
+    },
+    "user_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "action",
+    "outcome"
+  ],
+  "rls": {
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
